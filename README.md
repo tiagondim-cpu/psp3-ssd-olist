@@ -2,7 +2,7 @@
 
 [![Abrir no Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tiagondim-cpu/psp3-ssd-olist/blob/main/notebooks/analise_atraso_satisfacao_olist.ipynb)
 
-> **Status:** estrutura metodológica criada; análise ainda não executada. Nenhum resultado numérico será apresentado antes da execução e validação integral do notebook.
+> **Status:** notebook executado do início ao fim em ambiente limpo, com 29 verificações automáticas aprovadas. Todos os números abaixo vêm da execução registrada no `.ipynb`.
 
 ## Identificação
 
@@ -27,36 +27,58 @@ Uma operação de comércio eletrônico possui capacidade limitada de atendiment
 
 Quantificar a associação entre atraso de entrega e avaliação negativa e, a partir das evidências, propor uma regra simples e auditável de priorização do atendimento.
 
+## Principais resultados
+
+**Pedidos entregues depois da data prometida têm risco muito maior de receber avaliação ruim: 62,42% contra 9,27% dos entregues no prazo.** A diferença é de 53,2 pontos percentuais (IC 95%: 51,9 a 54,3) e corresponde a um risco relativo de 6,74x (IC 95%: 6,55 a 6,93). O teste unilateral de duas proporções rejeita a hipótese nula com valor-p abaixo de 0,0001.
+
+**O risco cresce com a duração do atraso até um patamar.** Acima de 14 dias não há aumento adicional detectável: as duas faixas superiores são estatisticamente indistinguíveis entre si.
+
+| Faixa de atraso | Pedidos | Avaliação ruim | Risco relativo | Prioridade sugerida |
+|---|---:|---:|---:|---|
+| No prazo ou antecipado | 89.443 | 9,27% | referência | Acompanhamento normal |
+| 1 a 3 dias | 1.852 | 32,13% | 3,47x | Contato humano proativo |
+| 4 a 7 dias | 1.748 | 67,68% | 7,30x | Escalonamento e avaliação de compensação |
+| 8 a 14 dias | 1.446 | 80,15% | 8,65x | Escalonamento e avaliação de compensação |
+| 15 dias ou mais | 1.335 | 78,35% | 8,45x | Escalonamento e avaliação de compensação |
+
+A regra seleciona 6.381 pedidos, 6,7% da amostra, distribuídos em 24 meses: cerca de 77 contatos humanos e 189 escalonamentos por mês.
+
+Base analisada: 95.824 pedidos entregues, de compras realizadas entre setembro de 2016 e agosto de 2018.
+
+**Robustez.** Duas escolhas de tratamento admitiam alternativa razoável e foram quantificadas no notebook. Conservar a avaliação mais antiga em vez da mais recente move o risco relativo de 6,735 para 6,734. Os pedidos entregues sem avaliação são 0,67% do total apto e estão mais atrasados que a média, 23,68% contra 6,66%; ainda assim, nos dois cenários extremos em que todos eles teriam avaliado bem ou todos mal, o risco relativo permanece entre 6,58 e 6,83.
+
+**Limite da evidência.** Os dados são observacionais. Mostram associação forte entre atraso e insatisfação, o que permite selecionar clientes por risco, mas não demonstram que o atraso cause a nota baixa nem que o contato proativo melhore a avaliação. Comprovar o efeito da ação exige teste A/B.
+
 ## Fonte dos dados
 
-Será utilizado o [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), conjunto público e anonimizado de pedidos realizados em marketplaces brasileiros.
+Foi utilizado o [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), conjunto público e anonimizado de pedidos realizados em marketplaces brasileiros. A **versão 2** do conjunto é fixada no identificador de download, de modo que qualquer reexecução leia exatamente os mesmos dados.
 
-Para manter o escopo proporcional à atividade, serão utilizados somente:
+Para manter o escopo proporcional à atividade, somente dois arquivos são lidos:
 
 - `olist_orders_dataset.csv`;
 - `olist_order_reviews_dataset.csv`.
 
-Os dados brutos não serão versionados neste repositório. O notebook deverá obtê-los de forma reproduzível por meio do pacote oficial `kagglehub`.
+Nenhum dado bruto é versionado neste repositório. O notebook os obtém de forma reproduzível pelo pacote oficial `kagglehub`.
 
-## Método planejado
+## Método aplicado
 
-1. Auditar estrutura, duplicidades, valores ausentes e datas.
-2. Definir uma linha por pedido e documentar todas as exclusões.
-3. Calcular dias de atraso usando datas-calendário.
-4. Definir avaliação ruim como nota 1 ou 2.
-5. Comparar pedidos atrasados e pedidos no prazo.
-6. Estimar diferença de risco, risco relativo e intervalos de confiança.
-7. Testar a diferença entre as proporções de avaliações ruins.
-8. Construir faixas de atraso e uma matriz de priorização gerencial.
-9. Registrar limitações e separar associação de causalidade.
+1. Auditoria de estrutura, duplicidades, valores ausentes e datas nos dois arquivos.
+2. Uma linha por pedido, com todas as exclusões quantificadas em um funil.
+3. Dias de atraso calculados por data-calendário, com as datas normalizadas para o início do dia.
+4. Avaliação ruim definida como nota 1 ou 2.
+5. Deduplicação das avaliações antes da junção, conservando a mais recente por pedido, e junção validada como um-para-um pelo próprio `pandas`.
+6. Comparação entre pedidos atrasados e no prazo, com diferença absoluta, risco relativo e intervalos de confiança.
+7. Teste unilateral de duas proporções, por escore e pelo teste z agrupado, e teste de associação ordinal entre as faixas.
+8. Faixas de atraso e matriz de priorização derivada do risco absoluto observado.
+9. Limitações registradas, separando associação de causalidade.
 
-## Entrega esperada
+## Entrega
 
-O principal artefato será o notebook:
+O artefato principal é o notebook:
 
 `notebooks/analise_atraso_satisfacao_olist.ipynb`
 
-Ele deverá combinar explicações em português, código Python, resultados executados, gráficos legíveis, teste estatístico, conclusão e recomendação gerencial.
+Ele combina explicação em português, código Python, resultados executados, quatro gráficos, teste estatístico, matriz de decisão, conclusão e limitações. O texto das conclusões é gerado a partir das variáveis calculadas, e os números do resumo executivo são conferidos automaticamente contra a análise.
 
 ## Estrutura do repositório
 
@@ -74,15 +96,13 @@ psp3-ssd-olist/
 
 ## Reprodutibilidade
 
-O trabalho só será considerado concluído quando o notebook:
+Verificado na execução registrada no `.ipynb`:
 
-- executar do início ao fim em uma sessão limpa do Google Colab;
-- baixar os dados sem depender de arquivos locais;
-- conservar os resultados e gráficos no arquivo `.ipynb`;
-- não expor tokens, senhas ou credenciais;
-- produzir conclusões consistentes com os valores calculados.
+- execução do início ao fim em ambiente limpo, sem erros e sem células sem saída;
+- dados obtidos por `kagglehub`, sem dependência de arquivos locais, caminhos absolutos ou Google Drive;
+- resultados e os quatro gráficos conservados no arquivo `.ipynb`;
+- nenhum token, senha ou credencial exposto ou versionado;
+- 29 verificações automáticas aprovadas, incluindo unicidade de `order_id`, cardinalidade da junção, coerência das variáveis construídas e conferência dos números do resumo executivo.
 
-## Limite de interpretação
-
-Dados observacionais podem indicar associação entre atraso e insatisfação, mas não demonstram que uma ação de atendimento causará melhora nas avaliações. Uma futura política de contato deverá ser validada por experimento controlado.
+O notebook interrompe a própria execução se qualquer verificação falhar.
 
