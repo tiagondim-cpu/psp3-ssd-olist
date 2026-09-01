@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Ambientes e segredos
+.env
+.env.*
+!.env.example
+kaggle.json
+access_token
+
+# Dados e caches locais
+data/
+*.csv
+*.zip
+.cache/
+
+# Editores e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
