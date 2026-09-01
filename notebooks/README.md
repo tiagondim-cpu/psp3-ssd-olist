@@ -1,17 +1,16 @@
-# Notebook principal
+# Notebook da análise
 
-O artefato final deverá ser criado neste diretório com o nome:
+`analise_atraso_satisfacao_olist.ipynb` contém a análise completa, com saídas e gráficos
+preservados. Ele pode ser lido diretamente no GitHub, sem executar nada.
 
-`analise_atraso_satisfacao_olist.ipynb`
+Para reexecutar, abra pelo botão "Abrir no Google Colab" no [README do repositório](../README.md)
+e rode todas as células. A execução leva poucos minutos em CPU e baixa os dados por `kagglehub`,
+sem depender de arquivos locais.
 
-## Requisitos
+Se o Kaggle exigir autenticação, crie um segredo chamado `KAGGLE_API_TOKEN` no Colab, pelo ícone
+de chave no menu lateral, com o token obtido em <https://www.kaggle.com/settings/api>. O token não
+deve ser colado em nenhuma célula.
 
-- compatível com Google Colab;
-- executável do início ao fim em CPU;
-- dados obtidos por `kagglehub`;
-- saídas e gráficos preservados no arquivo final;
-- texto em português do Brasil;
-- nenhuma dependência de arquivos locais, Google Drive pessoal ou credenciais embutidas.
-
-Consulte `../CLAUDE.md` para a especificação metodológica completa e `../PROMPT_CLAUDE_CODE.md` para o fluxo de implementação e auditoria.
-
+O notebook interrompe a própria execução se qualquer uma das 29 verificações automáticas falhar,
+de modo que uma reexecução bem-sucedida é evidência de que os resultados exibidos são consistentes
+com os dados lidos.

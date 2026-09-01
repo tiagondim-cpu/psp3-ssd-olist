@@ -15,6 +15,19 @@
 | Professor | Andre Luiz Marques Serrano |
 | Modalidade | Atividade individual |
 
+## Guia de leitura
+
+O artefato avaliável é um único notebook: **[`notebooks/analise_atraso_satisfacao_olist.ipynb`](notebooks/analise_atraso_satisfacao_olist.ipynb)**. Ele já contém todas as saídas e gráficos e pode ser lido no próprio GitHub, sem instalar nada. Para reexecutar, use o botão "Abrir no Google Colab" no topo desta página.
+
+| Para avaliar | Vá para |
+|---|---|
+| A resposta e sua magnitude | Seção 1, resumo executivo, e seção 14, conclusões |
+| O rigor do tratamento dos dados | Seção 8, funil de exclusões e junção validada como um-para-um |
+| A correção estatística | Seção 12, teste de hipótese, intervalos de confiança e medidas de efeito |
+| A tradução em decisão | Seção 13, matriz de priorização |
+| A honestidade sobre os limites | Seção 15, limitações quantificadas e cenários extremos |
+| A reprodutibilidade | Seção 16, quadro das 29 verificações e versões utilizadas |
+
 ## Situação-problema
 
 Uma operação de comércio eletrônico possui capacidade limitada de atendimento e precisa decidir quais pedidos devem receber acompanhamento proativo quando há atraso na entrega.
@@ -60,6 +73,8 @@ Para manter o escopo proporcional à atividade, somente dois arquivos são lidos
 
 Nenhum dado bruto é versionado neste repositório. O notebook os obtém de forma reproduzível pelo pacote oficial `kagglehub`.
 
+O conjunto é distribuído sob licença Creative Commons BY-NC-SA 4.0 pela Olist. Este trabalho é acadêmico e sem fins comerciais, compatível com essa licença.
+
 ## Método aplicado
 
 1. Auditoria de estrutura, duplicidades, valores ausentes e datas nos dois arquivos.
@@ -84,14 +99,12 @@ Ele combina explicação em português, código Python, resultados executados, q
 
 ```text
 psp3-ssd-olist/
-├── README.md
-├── CLAUDE.md
-├── PROMPT_CLAUDE_CODE.md
-├── requirements.txt
-├── .gitignore
+├── README.md                 sumário executivo e guia de leitura
+├── requirements.txt          dependências e versões mínimas
+├── .gitignore                bloqueia dados brutos e credenciais
 └── notebooks/
-    ├── README.md
-    └── analise_atraso_satisfacao_olist.ipynb
+    ├── README.md             instruções de execução
+    └── analise_atraso_satisfacao_olist.ipynb    análise completa, com saídas
 ```
 
 ## Reprodutibilidade
